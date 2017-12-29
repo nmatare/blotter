@@ -101,7 +101,7 @@
 #' Buy and hold return
 #' 
 #' Josh has suggested adding \%-return based stats too
-tradeStats <- function(Portfolios, Symbols ,use=c('txns','trades'), tradeDef='flat.to.flat',inclZeroDays=FALSE,envir=.blotter)
+tradeStats <- function(Portfolios, Symbols ,use=c('txns','trades'), tradeDef='flat.to.flat',inclZeroDays=FALSE,envir=.blotter, ...)
 {
     # initialize the ret data.frame so column types are correct  
     ret <- data.frame(Portfolio          = character(), 
@@ -142,7 +142,7 @@ tradeStats <- function(Portfolios, Symbols ,use=c('txns','trades'), tradeDef='fl
     tradeDef <- tradeDef[1]
     for (Portfolio in Portfolios){
         pname <- Portfolio
-        Portfolio<-.getPortfolio(pname, envir=envir)
+        Portfolio<-getPortfolio(pname, envir=envir, ... = ...)
         
         if(missing(Symbols)) symbols <- ls(Portfolio$symbols)
         else symbols <- Symbols
@@ -184,7 +184,7 @@ tradeStats <- function(Portfolios, Symbols ,use=c('txns','trades'), tradeDef='fl
                        #moved above for daily stats for now
                    },
                    trades = {
-                       trades <- perTradeStats(pname,symbol,tradeDef=tradeDef, envir=envir)
+                       trades <- perTradeStats(pname,symbol,tradeDef=tradeDef, envir=envir, ... = ...)
                        PL.gt0 <- trades$Net.Trading.PL[trades$Net.Trading.PL  > 0]
                        PL.lt0 <- trades$Net.Trading.PL[trades$Net.Trading.PL  < 0]
                        PL.ne0 <- trades$Net.Trading.PL[trades$Net.Trading.PL != 0]
@@ -308,12 +308,12 @@ tradeStats <- function(Portfolios, Symbols ,use=c('txns','trades'), tradeDef='fl
 #' @return a multi-column \code{xts} time series, one column per symbol, one row per day
 #' @seealso tradeStats
 #' @export
-dailyTxnPL <- function(Portfolios, Symbols, drop.time=TRUE, incl.total=FALSE, envir=.blotter)
+dailyTxnPL <- function(Portfolios, Symbols, drop.time=TRUE, incl.total=FALSE, envir=.blotter, ...)
 {
     ret <- NULL
     for (Portfolio in Portfolios){
         pname <- Portfolio
-        Portfolio <- .getPortfolio(pname, envir=envir)        
+        Portfolio <- getPortfolio(pname, envir=envir, ... = ...)        
         
         
         ## FIXME: need a way to define symbols for each portfolio    
@@ -345,12 +345,12 @@ dailyTxnPL <- function(Portfolios, Symbols, drop.time=TRUE, incl.total=FALSE, en
 #' @param native if TRUE, return statistics in the native currency of the instrument, otherwise use the Portfolio currency, default TRUE
 #' @rdname dailyTxnPL
 #' @export
-dailyEqPL <- function(Portfolios, Symbols, drop.time=TRUE, incl.total=FALSE, envir=.blotter, native=TRUE)
+dailyEqPL <- function(Portfolios, Symbols, drop.time=TRUE, incl.total=FALSE, envir=.blotter, native=TRUE, ...)
 {
     ret <- NULL
     for (Portfolio in Portfolios){
         pname <- Portfolio
-        Portfolio <- .getPortfolio(pname, envir=envir)        
+        Portfolio <- getPortfolio(pname, envir=envir, ... = ...)        
         
         ## FIXME: need a way to define symbols for each portfolio    
         if(missing(Symbols)) symbols <- ls(Portfolio$symbols)

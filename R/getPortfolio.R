@@ -13,7 +13,7 @@
 #' \code{.getPortfolio} are global.  You have been warned.
 #'  
 #' @param Portfolio string identifying portfolio
-#' @param Dates dates subset, not yet supported
+#' @param Dates xts subset of dates, e.g., "2007-01::2008-04-15"
 #' @param envir the environment to retrieve the portfolio from, defaults to .blotter
 #' 
 #' @seealso \code{\link{initPortf}}, \code{\link{updatePortf}}
@@ -34,12 +34,14 @@ getPortfolio <- function(Portfolio, Dates=NULL, envir=.blotter)
   attr(port, "initDate") <- attr(oport, "initDate")
   
   if(!is.null(Dates)){
-    message("date subsetting not yet supported")
-    #TODO add date subsetting in getPortfolio
+
+    port$summary <- port$summary[Dates]
+    port$symbols <- lapply(port$symbols, function(x) lapply(x, function(x) x[Dates]))
+
   }
   
   return(port)
-}  
+}
 
 #' @rdname getPortfolio
 .getPortfolio <- function(Portfolio, envir=.blotter) 

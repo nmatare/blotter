@@ -115,7 +115,7 @@ perTradeStats <- function(Portfolio
                           , envir=.blotter)
 {
 
-  portf <- .getPortfolio(Portfolio, envir = envir)
+  portf <- getPortfolio(Portfolio, envir = envir, ... = ...)
   if(missing(Symbol)) Symbol <- ls(portf$symbols)[[1]]
 
   posPL <- portf$symbols[[Symbol]]$posPL
